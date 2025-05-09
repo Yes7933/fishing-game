@@ -1,0 +1,11 @@
+:root {
+    --test: rgba(128, 128, 128, 0.5);
+}
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--test);
+    overflow: hidden;
+}

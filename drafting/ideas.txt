@@ -1,0 +1,8 @@
+fishing game BUT
+- you barter fish for materials (and rarer/higher value fish)
+-- you use these materials to craft fishing gear
+- fishing gear allows new areas to be accessed
+-- these areas have different fish that can be traded for other things
+- fishing system uses a stamina system (how much you can move the bar)
+- little rng, progression is dependent on how long you have grinded + some skill
+-- maybe like a really rare secret fish per area for collection (not for progression)
