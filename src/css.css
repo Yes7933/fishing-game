@@ -1,5 +1,6 @@
 :root {
     --test: rgba(128, 128, 128, 0.5);
+    --lineWidth: 8%;
 }
 body {
     margin: 0;
@@ -8,4 +9,51 @@ body {
     height: 100%;
     background-color: var(--test);
     overflow: hidden;
+}
+#minigameUI {
+    height: 40%;
+    width: var(--lineWidth);
+    display: flex;
+    flex-direction: row;
+    border: black solid 0.5vmin;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+#minigameBar {
+    background: #FFFF00;
+    background: radial-gradient(circle, rgba(255, 255, 0, 1) 0%, rgba(255, 0, 0, 1) 100%);
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+#innerMinigameBar {
+    background: #48ff00;
+    background: radial-gradient(circle, rgba(72, 255, 0, 1) 0%, rgba(31, 225, 0, 1) 95%, rgba(30, 224, 0, 0.5) 100%);
+    width: 100%;
+    height: 50%;
+}
+#line {
+    width: calc(var(--lineWidth) / 2);
+    height: 0.5%;
+    position: absolute;
+    top: 0;
+    background-color: black;
+}
+#progressBar {
+    width: 50%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#innerProgressBar {
+    width: 100%;
+    height: 0%;
+    background-color: white;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 }
