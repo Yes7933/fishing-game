@@ -1,6 +1,9 @@
 :root {
     --test: rgba(128, 128, 128, 0.5);
-    --lineWidth: 8%;
+}
+@font-face {
+    font-family: "STIXTwoText";
+    src: url(/assets/font/STIXTwoText-VariableFont_wght.ttf);
 }
 body {
     margin: 0;
@@ -9,15 +12,27 @@ body {
     height: 100%;
     background-color: var(--test);
     overflow: hidden;
+    font-family: "STIXTwoText";
+}
+button {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-family: "STIXTwoText";;
+    background-color: inherit;
 }
 #minigameUI {
+    position: absolute;
+    top: 30%;
+    left: 10%;
     height: 40%;
-    width: var(--lineWidth);
+    width: 8%;
     display: flex;
     flex-direction: row;
     border: black solid 0.5vmin;
     border-radius: 0.5rem;
     overflow: hidden;
+    anchor-name: --minigameUI;
 }
 #minigameBar {
     background: #FFFF00;
@@ -36,7 +51,7 @@ body {
     height: 50%;
 }
 #line {
-    width: calc(var(--lineWidth) / 2);
+    width: 50%
     height: 0.5%;
     position: absolute;
     top: 0;
@@ -56,4 +71,70 @@ body {
     background-color: white;
     transition-duration: 200ms;
     transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+#comboText {
+    position: absolute;
+    width: 0%;
+    height: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: yellow;
+    font-size: 3vmin;
+    text-shadow:
+    2px 2px 0 #000,
+  -2px -2px 0 #000,  
+   2px -2px 0 #000,
+   -2px 2px 0 #000,
+    2px 2px 0 #000;
+    transform: rotate(-30deg);
+    transform-origin: 50% 50%;
+    text-wrap: nowrap;
+    position-anchor: --minigameUI;
+    position-area: top left;
+    background-color: transparent;
+}
+#menuUI {
+    background-color: transparent;
+    height: 100%;
+    width: 30%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+#leftMenu {
+    display: flex;
+    flex-direction: column;
+    width: 10%;
+    display: grid;
+    grid-template-rows: 4fr 1fr;
+    margin-top: 2%;
+}
+.majorMenuButtons {
+    writing-mode: vertical-lr;
+    letter-spacing: 2px;
+    width: 100%;
+    height: 33%;
+    background-color: rgba(255,255,255,0.7);
+    width: 100%;
+    height: 100%;
+    font-size: 2.5vmin;
+    font-weight: 700;
+    clip-path: polygon(25% 0%, 100% 0, 100% 100%, 25% 100%, 0 95%, 0 5%);
+    transition-duration: 250ms;
+    position: relative;
+    right: -25%;
+    text-align: center;
+}
+.majorMenuButtons:hover {
+    right: 0%;
+}
+#menu {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
