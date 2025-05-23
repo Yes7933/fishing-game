@@ -51,11 +51,11 @@ button {
     height: 50%;
 }
 #line {
-    width: calc(40% + 0.25vmin);
-    height: 2%;
+    width: 50%;
+    height: 1.5%;
     position: absolute;
     top: 0%;
-    left: -0.25vmin;
+    left: calc(-5% - 0.0625vmin);
     background-color: white;
     border: black solid 0.25vmin;
     transform: translateY(-50%);
@@ -129,7 +129,7 @@ button {
 #leftMenu {
     display: flex;
     flex-direction: column;
-    width: 10%;
+    width: 6vmin;
     display: grid;
     grid-template-rows: 4fr 1fr;
     margin-top: 2%;
@@ -146,14 +146,14 @@ button {
     clip-path: polygon(25% 0%, 100% 0, 100% 100%, 25% 100%, 0 95%, 0 5%);
     transition-duration: 250ms;
     position: relative;
-    right: -25%;
+    right: -2.5vmin;
     display: flex;
     align-items: start;
     line-height: 125%;
     justify-content: center;
 }
 .majorMenuButtons:hover {
-    right: 0%;
+    right: 0% !important;
 }
 .minorMenuButtons {
     width: 100%;
@@ -176,10 +176,17 @@ button {
     width: 100%;
     height: 100%;
     z-index: 1;
+}
+.inventory {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(400, 1fr);
+    row-gap: 2vmin;
+    column-gap: 2vmin;
 }
-#menu > div {
-    background-color: red;
-    width: 50%
+.inventory > div {
+    background-color: var(--test);
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
 }

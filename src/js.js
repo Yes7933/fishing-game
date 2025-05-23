@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let tempList = comboFlavorText[Math.min(combo, 6)];
             comboTextElement.textContent = tempList[Math.floor(Math.random() * tempList.length)] + " x" + combo;
             comboTextElement.style.fontSize = (combo + 2) + "vmin";
-            progress += (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 2) * progressGain * (1 + comboMulti * Math.min(6, combo));
+            progress += (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 5.25) * progressGain * (1 + comboMulti * Math.min(6, combo)) + 0.01;
             progress = Math.min(1, progress);
             cooldownTimer = 0;
         } else {
@@ -117,11 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
             let lineTop = document.getElementById("line").getBoundingClientRect().top + document.getElementById("line").getBoundingClientRect().height / 2;
             let barTop = document.getElementById("innerMinigameBar").getBoundingClientRect().top;
             let barBottom = document.getElementById("innerMinigameBar").getBoundingClientRect().bottom;
-            document.getElementById("innerProgressBarTwo").style.height = (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 2) * progressGain * (1 + comboMulti * Math.min(6, combo)) * 100 + "%";
+            document.getElementById("innerProgressBarTwo").style.height = (1 - Math.abs((lineTop / (window.innerHeight * 1)) - 0.5) * 5.25) * progressGain * (1 + comboMulti * Math.min(6, combo)) * 100 + 1 + "%";
             if (lineTop <= barBottom && lineTop >= barTop) {
-                 document.getElementById("innerProgressBarTwo").style.backgroundColor = "rgb(255, 150, 192)";
+                 document.getElementById("innerProgressBarTwo").style.backgroundColor = "rgba(0, 255, 0, 0.5)";
             } else {
-                document.getElementById("innerProgressBarTwo").style.backgroundColor = "rgb(150, 150, 192)";
+                document.getElementById("innerProgressBarTwo").style.backgroundColor = "rgb(255, 255, 255, 0.5)";
             }
              fps2 = fps1;
             fps1 = Date.now();
@@ -137,7 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
     startMinigame(0.1, 6, 0.5, 10);
     document.querySelectorAll(".majorMenuButtons").forEach((e) => {
         e.addEventListener("click", () => {
+            if (menu !== null) document.getElementById(menu + "Open").style.right = "-2.5vmin"; 
             menu = e.id.slice(0, e.id.length - 4);
+            e.style.right = "0%";
+            document.getElementById("menu").innerHTML = "";
+            document.getElementById("menu").classList.replace(document.getElementById("menu").classList.item(0), menu);
             if (menu == "inventory") {
                 for (item in inventory) {
                     let newElement = document.createElement("div");
