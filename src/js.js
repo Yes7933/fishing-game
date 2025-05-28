@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let inventory = {
-        "Catfish": 23,
-        "Pike": 17,
-        "Anchovy": 5,
-        "Halibut": 2,
-        "Bass": 3,
-    }
+    let inventory = new Map([
+        ["Catfish", 23],
+        ["Pike", 17],
+        ["Anchovy", 5],
+        ["Halibut", 3],
+        ["Bass", 2],
+    ]);
+    console.log(inventory);
     let menu = null;
     let cooldown = 100;
 
@@ -42,13 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
             let barBottom = document.getElementById("innerMinigameBar").getBoundingClientRect().bottom;
             if (lineTop <= barBottom && lineTop >= barTop) {
                 combo++;
+                let hit = new Audio("/assets/audio/youtube_y1xBzjVrGDo_audio (mp3cut (mp3cut.net).mp3");
+                hit.play();
                 shake(20 * (combo / 2), 5 * combo, 10, 0.95);
                 comboTextElement.style.transitionDuration = "0ms"
-                comboTextElement.style.rotate = combo*360 + "deg"
+                comboTextElement.style.rotate = 360 + "deg"
                 comboTextElement.style.transitionDuration = "500ms"
                 setTimeout(() => {
                     comboTextElement.style.transitionDuration = "0ms"
                     comboTextElement.style.rotate = "0deg";
+                    setTimeout(() => {
+                        comboTextElement.style.transitionDuration = "500ms"
+                        comboTextElement.style.fontSize = "0vmin"
+                    }, 300)
                 }, 500)
             } else {
                 combo = 0;
@@ -57,8 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
             let tempList = comboFlavorText[Math.min(combo, 6)];
             comboTextElement.textContent = tempList[Math.floor(Math.random() * tempList.length)] + " x" + combo;
             comboTextElement.style.fontSize = (combo + 2) + "vmin";
-            progress += (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 5.25) * progressGain * (1 + comboMulti * Math.min(6, combo)) + 0.01;
+            progress += (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 5.25) * progressGain * (1 + comboMulti * combo);
             progress = Math.min(1, progress);
+            if (progress == 1) {
+                console.log("u win")
+            }
             cooldownTimer = 0;
         } else {
         }
@@ -70,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     /**
      * Triggers the fishing minigame with settings.
-     * @param {Number} cSM - Mulitplier when a combo is reached. 
+     * @param {Number} cSM - bar speed Mulitplier when a combo is reached. 
      * @param {Number} pL - Progress lost factor (divided by 100000).
      * @param {Number} pG - Progress gain factor (divided by 5).
      * @param {Number} cZW - Width for the zone where a combo is achieved (0, 70]
@@ -117,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let lineTop = document.getElementById("line").getBoundingClientRect().top + document.getElementById("line").getBoundingClientRect().height / 2;
             let barTop = document.getElementById("innerMinigameBar").getBoundingClientRect().top;
             let barBottom = document.getElementById("innerMinigameBar").getBoundingClientRect().bottom;
-            document.getElementById("innerProgressBarTwo").style.height = (1 - Math.abs((lineTop / (window.innerHeight * 1)) - 0.5) * 5.25) * progressGain * (1 + comboMulti * Math.min(6, combo)) * 100 + 1 + "%";
+            document.getElementById("innerProgressBarTwo").style.height = (1 - Math.abs(lineTop / (window.innerHeight * 1) - 0.5) * 5.25) * progressGain * (1 + comboMulti * combo) * 100 + "%";
             if (lineTop <= barBottom && lineTop >= barTop) {
                  document.getElementById("innerProgressBarTwo").style.backgroundColor = "rgba(0, 255, 0, 0.5)";
             } else {
@@ -134,19 +144,26 @@ document.addEventListener("DOMContentLoaded", () => {
         */
             window.requestAnimationFrame(minigameLoop);
     }
-    startMinigame(0.1, 6, 0.5, 10);
+    startMinigame(0.1, 6, 0.5, 50);
     document.querySelectorAll(".majorMenuButtons").forEach((e) => {
         e.addEventListener("click", () => {
             if (menu !== null) document.getElementById(menu + "Open").style.right = "-2.5vmin"; 
+            if (menu !== e.id.slice(0, e.id.length - 4)) {
             menu = e.id.slice(0, e.id.length - 4);
-            e.style.right = "0%";
-            document.getElementById("menu").innerHTML = "";
-            document.getElementById("menu").classList.replace(document.getElementById("menu").classList.item(0), menu);
-            if (menu == "inventory") {
-                for (item in inventory) {
-                    let newElement = document.createElement("div");
-                    document.getElementById("menu").appendChild(newElement);
-                    newElement.innerHTML = `<img><div>${item}</div><div>${inventory[item]}</div>`;
+                e.style.right = "0%";
+                document.getElementById("menu").innerHTML = "";
+                document.getElementById("menu").classList.replace(document.getElementById("menu").classList.item(0), menu);
+                if (menu == "inventory") {
+                    document.getElementById("menu").innerHTML = "<div id='inventorySearch'><input id='searchBar'></input></div>";
+                    let container = document.createElement("div");
+                    container.id = "inventoryContainer";
+                    document.getElementById("menu").appendChild(container);
+                    inventory.forEach((e, k) => {
+                        let newElement = document.createElement("div");
+                        newElement.classList.add("inventoryItem");
+                        container.appendChild(newElement);
+                        newElement.innerHTML = `<div>${k}</div><div>${e}</div><img src="/assets/img/${k}.webp" style="width: 75%;">`;
+                    });
                 }
             }
         });

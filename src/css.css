@@ -177,16 +177,30 @@ button {
     height: 100%;
     z-index: 1;
 }
-.inventory {
-    display: grid;
+#inventoryContainer {
+    width: 96%;
+    height: auto;
+    min-height: 100%;
+    margin: 2%;
+ display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(400, 1fr);
+    grid-template-rows: 1fr repeat(400, 1fr);
     row-gap: 2vmin;
     column-gap: 2vmin;
 }
-.inventory > div {
+#inventorySearch {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.inventoryItem {
     background-color: var(--test);
     width: 100%;
     aspect-ratio: 1 / 1;
     display: flex;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
