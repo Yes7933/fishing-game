@@ -1,5 +1,8 @@
 :root {
     --test: rgba(128, 128, 128, 0.5);
+    --rare: rgb(150,150,255);
+    --common: rgb(150,255,150);
+    --super_rare: rgb(255,150,150);
 }
 @font-face {
     font-family: "STIXTwoText";
@@ -178,15 +181,15 @@ button {
     z-index: 1;
 }
 #inventoryContainer {
-    width: 96%;
+    width: 98%;
     height: auto;
     min-height: 100%;
-    margin: 2%;
- display: grid;
+    margin: 1%;
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr repeat(400, 1fr);
-    row-gap: 2vmin;
-    column-gap: 2vmin;
+    row-gap: 0.5vmin;
+    column-gap: 0.5vmin;
 }
 #inventorySearch {
     display: flex;
@@ -194,12 +197,16 @@ button {
     justify-content: center;
     align-items: center;
 }
+#searchBar {
+    width: 100%;
+    height: 100%;
+}
 .inventoryItem {
     background-color: var(--test);
     width: 100%;
     aspect-ratio: 1 / 1;
     display: flex;
-    border-radius: 1rem;
+    border-radius: 0.2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
