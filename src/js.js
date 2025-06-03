@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ]);
 
     let rarityOrder = ["Common", "Rare", "Super_Rare"];
-    let inventorySetting = "rarity";
+    let inventorySetting = "alphabet";
     let inventoryReversed = false;
 
     let menu = null;
@@ -27,9 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
     let progressLost = -1 / (100 * 1);
     let progressGain = 0.5;
     let comboZoneWidth = 20;
+    let currentRod = "Good_Rod";
 
     let fps1, fps;
     let comboTextElement = document.getElementById("comboText");
+
+    let fishStats = {
+        Catfish: [1, 1, 1, 1],
+        Dogfish: [-1, -1, -1, -1],
+        Difficult_Fish: [100, 1000, 0.01, 0.1],
+    };
+    let rodStats = {
+        Wooden_Rod: [0.25, 10, 1, 15],
+        Test_Rod: [1, 1, 1, 1],
+        Good_Rod: [0.001, 0, 1000, 1000],
+        Net: [0, -25, 0, 0],
+    };
 
     let comboFlavorText = [
         ["Combo Broken...", "Combo Lost..."],
@@ -46,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.addEventListener("keydown", (e) => {
-        if (!spaceDown && e.key === " " && cooldown <= cooldownTimer) {
+        if (!spaceDown && e.key === " " && cooldown <= cooldownTimer && playing) {
             spaceDown = true;
             let lineTop = document.getElementById("line").getBoundingClientRect().top + document.getElementById("line").getBoundingClientRect().height / 2;
             let barTop = document.getElementById("innerMinigameBar").getBoundingClientRect().top;
@@ -76,9 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
             let tempList = comboFlavorText[Math.min(combo, 6)];
             comboTextElement.textContent = tempList[Math.floor(Math.random() * tempList.length)] + " x" + combo;
             comboTextElement.style.fontSize = combo + 2 + "vmin";
+            if (combo >= 7) {
+                comboTextElement.style.animation = "rainbow 2s linear 0s infinite forwards normal";
+            } else {
+                comboTextElement.style.animation = "inherit";
+            }
             progress = Math.min(1, progress);
-            if (progress == 1) {
-                console.log("u win");
+            if (progress >= 1) {
+                catchFish(1);
             }
             cooldownTimer = 0;
         } else {
@@ -94,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {Number} cSM - bar speed Mulitplier when a combo is reached.
      * @param {Number} pL - Progress lost factor (divided by 100000).
      * @param {Number} pG - Progress gain factor (divided by 5).
-     * @param {Number} cZW - Width for the zone where a combo is achieved (0, 70]
+     * @param {Number} cZW - Width for the zone where a combo is achieved (0, 70)
      */
     function startMinigame(cSM, pL, pG, cZW) {
         comboSpeedMultiplier = cSM;
@@ -126,12 +144,37 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(shake, interval, magnitude * decay, repeat - 1, interval, decay);
         }
     }
+    function fall(element, start, end, time, easing) {
+        function easingfunc(x) {
+            const c1 = 1.70158;
+            const c3 = c1 + 1;
+            return ((c3 * x * x * x - c1 * x * x) + start / 50) * 50;
+            //return ((start - end) / 2) * Math.cos(((Math.PI * 2) / (2 * time)) * x) + (start + end) / 2;
+        }
+        element.style.top = easingfunc(easing / time).toString() + "%";
+        if (easingfunc(easing) !== end) {
+            setTimeout(fall, 1, element, start, end, time, easing + 2);
+        }
+    }
+    function rotate(element, start, end, time, easing) {
+        function easingfunc(x) {
+            const c1 = 1.70158;
+            const c3 = c1 + 1;
+            return (c3 * x * x * x - c1 * x * x + start / 50) * 50;
+            //return ((start - end) / 2) * Math.cos(((Math.PI * 2) / (2 * time)) * x) + (start + end) / 2;
+        }
+        element.style.rotate = easingfunc(easing / time).toString() + "deg";
+        if (easingfunc(easing) !== end) {
+            setTimeout(rotate, 1, element, start, end, time, easing + 2);
+        }
+    }
     function minigameLoop() {
-        document.getElementById("line").style.top = (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 125 + (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 115 * (Math.atan(2 * Math.sin(time / 100)) / Math.atan(2)) + "%";
+        if (playing) document.getElementById("line").style.top = (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 125 + (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 115 * (Math.atan(2 * Math.sin(time / 100)) / Math.atan(2)) + "%";
         let fps2 = Date.now();
         fps = fps2 - fps1;
         time += fps * (comboSpeedMultiplier * (1 + combo));
-        progress += fps * progressLost;
+        if (progress >= 1 && playing) catchFish(1)
+        if (playing) progress += fps * progressLost
         cooldownTimer += fps;
         progress = Math.max(0, progress);
         document.getElementById("innerProgressBar").style.height = progress * 100 + "%";
@@ -158,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
         */
         window.requestAnimationFrame(minigameLoop);
     }
-    startMinigame(0.1, 6, 0.5, 99);
     function sortInventory(value = false) {
         let array = Array.from(inventory, ([key, value]) => ({ key, value }));
         let searchArray = [];
@@ -183,12 +225,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (inventorySetting === "amount") {
                 searchArray.sort((a, b) => {
                     if (a.value[0] > b.value[0]) return r * -1;
-                    if (a.value[0] < b.value[0]) return r
+                    if (a.value[0] < b.value[0]) return r;
                     return 0;
                 });
                 notSearchedArray.sort((a, b) => {
                     if (a.value[0] > b.value[0]) return r * -1;
-                    if (a.value[0] < b.value[0]) return r
+                    if (a.value[0] < b.value[0]) return r;
                     return 0;
                 });
             }
@@ -217,7 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (inventorySetting === "rarity") {
                 array = array.sort((a, b) => {
-                    console.log(rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]), array);
                     return r * rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]);
                 });
             }
@@ -233,16 +274,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("menu").innerHTML = "";
                 document.getElementById("menu").classList.replace(document.getElementById("menu").classList.item(0), menu);
                 if (menu == "inventory") {
-                    document.getElementById("menu").innerHTML = "<div id='inventorySearch'><input id='searchBar' autocomplete='off'></input></div>";
+                    document.getElementById("menu").innerHTML = "<div id='inventorySearch'><input id='searchBar' autocomplete='off'></input><button id='filter'>Sort: Alphabetically</button></div>";
                     document.getElementById("searchBar").addEventListener("input", () => {
                         document.getElementById("inventoryContainer").innerHTML = "";
                         let array = sortInventory(document.getElementById("searchBar").value.length >= 1);
                         array.forEach((e) => {
-                            if (e.key.toLowerCase().indexOf(document.getElementById("searchBar").value.toLowerCase()) !== -1) {
+                            if (e.key.toLowerCase().indexOf(document.getElementById("searchBar").value.toLowerCase()) !== -1 && e.value[0] > 0) {
                                 let newElement = document.createElement("div");
                                 newElement.classList.add("inventoryItem");
+                                newElement.style.backgroundColor = `var(--${e.value[1].toLowerCase()})`;
                                 container.appendChild(newElement);
-                                newElement.innerHTML = `<div>${e.key} x${e.value[0]}</div><img src="/assets/img/${e.key}.webp" style="width: 75%;">`;
+                                newElement.innerHTML = `<div>${e.key} x${e.value[0]}</div><img src="/assets/img/${e.key}.png" style="width: 75%;">`;
                             }
                         });
                     });
@@ -251,13 +293,53 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById("menu").appendChild(container);
                     let array = sortInventory();
                     array.forEach((e) => {
-                        let newElement = document.createElement("div");
-                        newElement.classList.add("inventoryItem");
-                        container.appendChild(newElement);
-                        newElement.innerHTML = `<div>${e.key} x${e.value[0]}</div><img src="/assets/img/${e.key}.webp" style="width: 75%;">`;
+                        if (e.value[0] > 0) {
+                            let newElement = document.createElement("div");
+                            newElement.classList.add("inventoryItem");
+                            newElement.style.backgroundColor = `var(--${e.value[1].toLowerCase()})`;
+                            container.appendChild(newElement);
+                            newElement.innerHTML = `<div>${e.key} x${e.value[0]}</div><img src="/assets/img/${e.key}.png" style="width: 85%; height: 75%">`;
+                        }
                     });
                 }
             }
         });
     });
+    let currentFish = "none";
+    function spawnFish(fishName) {
+        playing = true
+        currentFish = fishName;
+        progress = 0
+        let newStatTable = fishStats[fishName].map((e, i) => e * rodStats[currentRod][i]);
+        document.getElementById("minigameUI").style.display = "flex"
+        document.getElementById("comboText").style.display = "flex"
+        startMinigame(...newStatTable);
+    }
+    spawnFish("Catfish");
+    function catchFish(amount) {
+        playing = false
+        document.getElementById("innerProgressBar").style.backgroundColor = "rgb(255,230,0)"
+        fall(document.getElementById("minigameUI"), 30, 100, 500, 0)
+        rotate(document.getElementById("minigameUI"), 0, 90, 500, 0);
+        setTimeout(() => {
+        document.getElementById("minigameUI").style.display = "none"
+        document.getElementById("comboText").style.display = "none"
+        }, 4000);
+        inventory.set(currentFish, [inventory.get(currentFish)[0] + amount, inventory.get(currentFish)[1]]);
+        if (menu == "inventory") {
+            document.getElementById("inventoryContainer").innerHTML = "";
+            let array = sortInventory(document.getElementById("searchBar").value.length >= 1);
+            array.forEach((e) => {
+                if (e.key.toLowerCase().indexOf(document.getElementById("searchBar").value.toLowerCase()) !== -1) {
+                    if (e.value[0] > 0) {
+                        let newElement = document.createElement("div");
+                        newElement.classList.add("inventoryItem");
+                        newElement.style.backgroundColor = `var(--${e.value[1].toLowerCase()})`;
+                        document.getElementById("inventoryContainer").appendChild(newElement);
+                        newElement.innerHTML = `<div>${e.key} x${e.value[0]}</div><img src="/assets/img/${e.key}.png" style="width: 85%; height: 75%">`;
+                    }
+                }
+            });
+        }
+    }
 });

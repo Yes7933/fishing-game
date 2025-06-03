@@ -30,7 +30,7 @@ button {
     left: 10%;
     height: 40%;
     width: 3%;
-    display: flex;
+    display: none;
     flex-direction: row;
     gap: 10%;
     anchor-name: --minigameUI;
@@ -99,10 +99,9 @@ button {
     position: absolute;
     width: 0%;
     height: 0%;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    color: yellow;
     font-size: 3vmin;
     text-shadow:
     1.5px 1.5px 0 #000,
@@ -117,6 +116,7 @@ button {
     position-area: top left;
     background-color: transparent;
     transition-duration: 500ms;
+    color: yellow;
 }
 #menuUI {
     background-color: transparent;
@@ -210,4 +210,28 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 1rem;
+}
+@keyframes rainbow {
+    0% {
+        color: rgb(255, 162, 162);
+    }
+    16.6% {
+        color: rgb(255, 219, 152);
+    }
+    33.3% {
+        color: rgb(255, 255, 136);
+    }
+    50% {
+        color: rgb(139, 255, 139);
+    }
+    66.6% {
+        color: rgb(142, 187, 255)
+    }
+    83.3% {
+        color: rgb(255, 116, 255)
+    }
+    100% {
+        color: rgb(255, 199, 208);
+    }
 }
