@@ -5,7 +5,7 @@
 </head>
 <body>
     <div data-no-snippet>
-        <button id="cast">Cast!</button>
+        <button id="cast" onkeydown="return false;">Cast!</button>
         <div id="minigameUI">
             <div id="minigameBar" class="outsideBar">
                 <div id="line"></div>
@@ -19,7 +19,7 @@
         <div id="comboText"></div>
         <div id="menuUI">
             <div id="leftMenu">
-                <div style="display: grid; grid-template-rows: repeat(3, 1fr); gap: 2%">
+                <div style="display: grid; grid-template-rows: 1fr 1fr 1fr; gap: 2%">
                     <button id="inventoryOpen" class="majorMenuButtons">Inventory</button>
                     <button id="shopOpen" class="majorMenuButtons">Shop/Trading</button>
                     <button id="craftOpen" class="majorMenuButtons">Craft</button>
@@ -30,6 +30,7 @@
                 </div>
             </div>
             <div id="menu" class="null"></div>
+            <div id="fakemenu"></div>
         </div>
     </div>
 </body>

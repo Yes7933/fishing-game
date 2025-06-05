@@ -1,8 +1,10 @@
 :root {
-    --test: rgba(128, 128, 128, 0.5);
+    --test: rgb(203, 239, 255);
     --rare: rgb(150,150,255);
     --common: rgb(150,255,150);
     --super_rare: rgb(255,150,150);
+    --outline: black;
+    --mainui: rgba(255, 255, 255);
 }
 @font-face {
     font-family: "STIXTwoText";
@@ -16,6 +18,7 @@ body {
     background-color: var(--test);
     overflow: hidden;
     font-family: "STIXTwoText";
+    user-select: none;
 }
 button {
     border: 0;
@@ -23,6 +26,9 @@ button {
     padding: 0;
     font-family: "STIXTwoText";
     background-color: inherit;
+}
+input {
+    font-family: "STIXTwoText";
 }
 #minigameUI {
     position: absolute;
@@ -66,7 +72,7 @@ button {
 #progressBar {
     width: 50%;
     height: 100%;
-    background-color: rgb(192, 192, 192);
+    background-color: rgb(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column-reverse;
     overflow: hidden;
@@ -143,10 +149,10 @@ button {
     letter-spacing: 2px;
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,0.7);
+    background-color: var(--mainui);
     font-size: 2.5vmin;
     font-weight: 700;
-    clip-path: polygon(25% 0%, 100% 0, 100% 100%, 25% 100%, 0 95%, 0 5%);
+    border-radius: 1rem;
     transition-duration: 250ms;
     position: relative;
     right: -2.5vmin;
@@ -154,6 +160,7 @@ button {
     align-items: start;
     line-height: 125%;
     justify-content: center;
+    border: var(--outline) solid 0.25vmin;
 }
 .majorMenuButtons:hover {
     right: 0% !important;
@@ -161,15 +168,16 @@ button {
 .minorMenuButtons {
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,0.7);
+    background-color: var(--mainui);
     letter-spacing: 2px;
     font-size: 2.5vmin;
     font-weight: 500;
-    clip-path: polygon(25% 0%, 100% 0, 100% 100%, 25% 100%, 0 75%, 0 25%);
+    border-radius: 1rem;
     position: relative;
     right: -25%;
     text-align: center;
     transition-duration: 250ms;
+    border: var(--outline) solid 0.25vmin;
 }
 .minorMenuButtons:hover {
     right: 0%;
@@ -179,6 +187,14 @@ button {
     width: 100%;
     height: 100%;
     z-index: 1;
+}
+#fakemenu {
+    background-color: black;
+    width: 0.25vmin;
+    height: 100%;
+    position: absolute;
+    left: 5.75vmin;
+    z-index: -1;
 }
 #inventoryContainer {
     width: 98%;
@@ -200,6 +216,16 @@ button {
 #searchBar {
     width: 100%;
     height: 100%;
+    border: var(--outline) solid 0.25vmin;
+    border-radius: 2rem;
+    font-size: 2vmin;
+    font-weight: 600;
+    text-indent: 0.75vmin;
+    transition-duration: 200ms;
+        outline: none;
+}
+#searchBar:focus {
+    border: rgb(180, 180, 180) solid 0.25vmin;
 }
 .inventoryItem {
     background-color: var(--test);
@@ -211,6 +237,35 @@ button {
     flex-direction: column;
     align-items: center;
     border-radius: 1rem;
+    border: var(--outline) solid 0.2vmin;
+}
+#filter {
+    background: var(--mainui);
+    outline: none;
+    border: var(--outline) solid 0.25vmin;
+    border-radius: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1vmin;
+    font-weight: 700;
+    min-width: 20%;
+    min-height: 3em;
+}
+#reverse {
+    background: var(--mainui);
+    outline: none;
+    border: var(--outline) solid 0.25vmin;
+    border-radius: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1vmin;
+    font-weight: 700;
+    min-width: 20%;
+    min-height: 3em;
 }
 @keyframes rainbow {
     0% {
@@ -234,4 +289,23 @@ button {
     100% {
         color: rgb(255, 199, 208);
     }
+}
+
+#cast {
+    background: var(--mainui);
+    width: 7%;
+    height: 4%;
+    outline: none;
+    border: var(--outline) solid 0.25vmin;
+    border-radius: 0.6rem;
+    position: absolute;
+    left: 15%;
+    top: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2.5vmin;
+    font-weight: 700;
+    
 }
