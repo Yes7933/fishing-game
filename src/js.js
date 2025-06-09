@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let inventoryReversed = false;
 
     let menu = null;
+    let menuclosed = false;
     let cooldown = 100;
 
     let combo = 0;
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let progressLost = -1 / (100 * 1);
     let progressGain = 0.5;
     let comboZoneWidth = 20;
-    let currentRod = "Wooden_Rod";
+    let currentRod = "Dirt_Rod";
 
     let fps1, fps;
     let comboTextElement = document.getElementById("comboText");
@@ -42,6 +43,25 @@ document.addEventListener("DOMContentLoaded", () => {
         Dogfish: [-1, -1, -1, -1, -1],
         Difficult_Fish: [100, 1000, 0.01, 0.1, 10],
     };
+    let values = new Map([
+        ["Catfish", 0.1],
+        ["Pike", 2],
+        ["Dogfish", 25],
+        ["Difficult_Fish", 100],
+        ["Wooden_Pole", 25],
+        ["Metal_Pole", 250],
+        ["Fishing_Line", 50],
+        ["Worm", 3],
+        ["Expensive_Fish", 10000],
+        ["Red40", 35],
+        ["Salmon_Roe", 80],
+    ]);
+    function getRandomItemFromMap(map) {
+        const mapArray = Array.from(map);
+        const randomIndex = Math.floor(Math.random() * mapArray.length);
+        return mapArray[randomIndex];
+    }
+
     //bar move speed
     //progress lost
     //progress gained
@@ -180,6 +200,24 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(rotate, 1, element, start, end, time, easing + 2);
         }
     }
+    function move(element, start, end, time, easing) {
+        function easingfunc(x) {
+            return x === 0 ? 0 : -Math.pow(2, 10 * x - 10);
+        }
+        element.style.right = easingfunc(easing / time).toString() + "%";
+        if (parseInt(window.getComputedStyle(document.getElementById("menuUI")).right) >= end) {
+            setTimeout(move, 1, element, start, end, time, easing + 1);
+        }
+    }
+    function moveforward(element, start, end, time, easing) {
+        function easingfunc(x) {
+            return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
+        }
+        element.style.right = easingfunc(easing / time).toString() + "%";
+        if (parseInt(element.style.right) <= end) {
+            setTimeout(moveforward, 1, element, start, end, time, easing + 1);
+        }
+    }
     function minigameLoop() {
         if (playing)
             document.getElementById("line").style.top = (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 125 + (document.getElementById("minigameBar").getBoundingClientRect().height / window.innerHeight) * 115 * (Math.atan(2 * Math.sin(time / 100)) / Math.atan(2)) + "%";
@@ -250,10 +288,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (inventorySetting === "rarity") {
                 searchArray.sort((a, b) => {
-                    return r * rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]);
+                    return r * (rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]));
                 });
                 notSearchedArray.sort((a, b) => {
-                    return r * rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]);
+                    return r * (rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]));
                 });
             }
             if (inventorySetting === "random") {
@@ -283,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (inventorySetting === "rarity") {
                 array = array.sort((a, b) => {
-                    return r * rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]);
+                    return r * (rarityOrder.indexOf(a.value[1]) - rarityOrder.indexOf(b.value[1]));
                 });
             }
             if (inventorySetting === "random") {
@@ -299,6 +337,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return array;
     }
+
+    function generateTrades(num) {
+        for (i = 0; i < num; i++) {
+            quantity = 0
+            squan = 0
+            while (quantity == 0 || squan == 0) {
+                firstItem = getRandomItemFromMap(values)[0];
+                quantity = Math.ceil(Math.random() * 10);
+                secondItem = getRandomItemFromMap(values)[0];
+                while (secondItem === firstItem) {
+                    secondItem = getRandomItemFromMap(values)[0];
+                }
+                fval = values.get(firstItem)
+                sval = values.get(secondItem)
+                squan = Math.round(fval * (1 + Math.random()/3) * quantity / sval)
+            }
+            console.log(quantity + " " + firstItem + " for " + squan +" "+ secondItem)
+        }
+    }
+    generateTrades(250);
+
+    function loadTrading() {}
+
+
+    document.getElementById("hideMenu").addEventListener("click", () => {
+        menuclosed = !menuclosed;
+        if (menuclosed) {
+            move(document.getElementById("menuUI"), 0, -1000, 50, 0);
+            let newElement = document.createElement("button");
+            newElement.id = "hideMenu";
+            newElement.classList.add("minorMenuButtons");
+            newElement.style.width =  "6vmin";
+            newElement.style.height = "9.408%";
+            document.getElementById("body").appendChild(newElement);
+        }
+    });
     document.querySelectorAll(".majorMenuButtons").forEach((e) => {
         e.addEventListener("click", () => {
             if (menu !== null) document.getElementById(menu + "Open").style.right = "-2.5vmin";
