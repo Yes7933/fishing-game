@@ -339,6 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function generateTrades(num) {
+        let outputTrades = []
         for (i = 0; i < num; i++) {
             quantity = 0
             squan = 0
@@ -353,13 +354,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 sval = values.get(secondItem)
                 squan = Math.round(fval * (1 + Math.random()/3) * quantity / sval)
             }
-            console.log(quantity + " " + firstItem + " for " + squan +" "+ secondItem)
+            let newTrade = [[firstItem,quantity],[secondItem,quantity],Date.now() + 1000 * (240 * Math.random())]
+            outputTrades.push(newTrade)
+        }
+        return outputTrades
+    }
+
+    trades = generateTrades(10)
+
+    function convertTime(millis) {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return (
+            seconds == 60 ?
+            (minutes+1) + ":00" :
+            minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+        );
+    }
+
+    function loadTrading() {
+        for (let n in trades) {
+            let currentTrade = trades[n]
+            let tradeElement = document.createElement("button")
+            let tradeText = document.createElement("div")
+            let tradeTime = document.createElement("div")
+            tradeTime.classList.add("timer")
+            tradeElement.appendChild(tradeText)
+            tradeElement.appendChild(tradeTime)
+            tradeElement.classList.add("trade")
+            tradeTime.setAttribute("timeout",currentTrade[2])
+            tradeText.innerHTML = currentTrade[0][0].replace(/_/g, " ") + " x" + currentTrade[0][1] + "  for " + currentTrade[1][0].replace(/_/g, " ") + " x" + currentTrade[1][1]
+            tradeTime.innerHTML = convertTime(currentTrade[2] - Date.now())
+            document.getElementById("menu").appendChild(tradeElement)
         }
     }
-    generateTrades(250);
-
-    function loadTrading() {}
-
 
     document.getElementById("hideMenu").addEventListener("click", () => {
         menuclosed = !menuclosed;
@@ -455,9 +483,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 }
+                if (menu == "shop") {
+                    loadTrading()
+                }
             }
         });
     });
+    setInterval(function() { // updates shop timer
+        if (menu == "shop") {
+            let elements = document.getElementById("menu").querySelectorAll('*');
+            elements.forEach(element => {
+                let cele = element.querySelectorAll(".timer")
+                cele.forEach(e2 => {
+                    e2.innerHTML = (convertTime(e2.getAttribute("timeout") - Date.now()))
+                    e2.style.color = "rgb("+ 10000000 / (e2.getAttribute("timeout") - Date.now()) +",0,0)"
+                })
+            });
+        }
+    }, 500);
     let currentFish = "none";
     function spawnFish(fishName) {
         firstHit = false;

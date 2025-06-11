@@ -1,5 +1,6 @@
 :root {
     --test: rgb(203, 239, 255);
+    --test2: rgb(113, 184, 214);
     --rare: rgb(150,150,255);
     --common: rgb(150,255,150);
     --super_rare: rgb(255,150,150);
@@ -73,7 +74,7 @@ input {
     width: 50%;
     height: 100%;
     background: #ffffff;
-    background: linear-gradient(0deg,rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 24%, rgba(0, 0, 0, 1) 25%, rgba(255, 255, 255, 1) 26%, rgba(255, 255, 255, 1) 37%, rgba(255, 255, 255, 1) 49%, rgba(0, 0, 0, 1) 50%, rgba(255, 255, 255, 1) 51%, rgba(255, 255, 255, 1) 74%, rgba(0, 0, 0, 1) 75%, rgba(255, 255, 255, 1) 76%, rgba(255, 255, 255, 1) 100%);
+    background: none;
     display: flex;
     flex-direction: column-reverse;
     overflow: hidden;
@@ -239,6 +240,23 @@ input {
     align-items: center;
     border-radius: 1rem;
     border: var(--outline) solid 0.2vmin;
+}
+.trade {
+    background-color: var(--test);
+    width: 100%;
+    display: flex;
+    border-radius: 0.2rem;
+    border: var(--outline) solid 0.2vmin;
+    font-size: 2vmin;
+    transition-duration: 500ms;
+}
+.timer {
+    text-align: right;
+    width: 100%;
+    color: black;
+}
+.trade:hover {
+    background-color: var(--test2);
 }
 #filter {
     background: var(--mainui);
